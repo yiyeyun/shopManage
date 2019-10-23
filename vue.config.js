@@ -14,9 +14,9 @@ module.exports = {
   lintOnSave: false,
   pluginOptions: {
     'style-resources-loader': {
-      preProcessor: 'scss',
+      preProcessor: 'less',
       patterns: [
-        'D:\\资料\\outbao\\亿业云\\cli3\\yiyeyun\\src\\assets\\less\\variable.less'
+        path.resolve(__dirname, './src/assets/less/variable.less')
       ]
     }
   }
