@@ -1,0 +1,225 @@
+.font-ellipsis{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.title1{
+    font-size: 44px;
+    font-weight: bold;
+    color: #333;
+}
+.title2{
+    font-size: 36px;
+    font-weight: 600;
+    color: #333;
+}
+.title3{
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+}
+.title4{
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+}
+.title5{
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+.title6{
+    font-size: 30px;
+    font-weight: 600;
+    color: #333;
+}
+.text1{
+    font-size: 30px;
+    font-weight: 400;
+    color: #999;
+}
+
+.text2{
+    font-size: 24px;
+    font-weight: 400;
+    color: #999;
+}
+.text3{
+    font-size: 26px;
+    font-weight: 400;
+    color: #bbb;
+}
+.text4{
+    font-size: 28px;
+    font-weight: 400;
+    color: #999;
+}
+
+.text5{
+    font-size: 24px;
+    font-weight: 400;
+    color: #666;
+}
+.text6{
+    font-size: 28px;
+    color: #666;
+}
+.font-tip{
+    font-size: 26px;
+    font-weight: 400;
+    color: #999;
+}
+
+.font-20-999{
+    font-size: 20px;
+    color: #999;
+}
+.font-22-333{
+    font-size: 22px;
+    color: #333;
+}
+.font-22-999{
+  font-size: 22px;
+  color: #999;
+}
+.font-24-333{
+    font-size: 24px;
+    color: #333;
+}
+.font-24-666{
+    font-size: 24px;
+    color: #666;
+}
+.font-24-999{
+    font-size: 24px;
+    color: #999;
+}
+.font-26-333{
+    font-size: 26px;
+    color: #333;
+}
+.font-34-666{
+    font-size: 34px;
+    color: #666;
+}
+.font-40-333{
+    font-size: 40px;
+    color: #333;
+}
+.font-32-333{
+  font-size: 32px;
+  color: #333;
+}
+.font-30-000{
+  font-size: 30px;
+  color: #000;
+}
+.font-28-999{
+  font-size: 28px;
+  color: #999;
+}
+.font-28-000{
+  font-size: 28px;
+  color: #000;
+}
+.font-28-333{
+  font-size: 28px;
+  color: #333;
+}
+.font-20-666{
+  font-size: 20px;
+  color: #666;
+}
+.font-30-333{
+  font-size: 30px;
+  color: #333;
+}
+.font-30-999{
+  font-size: 30px;
+  color: #999;
+}
+.font-32-999{
+  font-size: 32px;
+  color: #999;
+}
+.text-primary{
+    color: #539dff;
+}
+.text-success{
+    color: #4ba935;
+}
+.text-danger{
+    color: #F43E42;
+}
+.text-price{
+    color: #D7A148;
+}
+.font-size-30{
+    font-size: 30px;
+}
+.font-color-3{
+    color: #333;
+}
+.font-color-6{
+    color: #666;
+}
+.font-size-26{
+    font-size: 26px;
+}
+.font-size-20{
+    font-size: 20px;
+}
+.font-size-24{
+    font-size: 24px;
+}
+.font-size-28{
+    font-size: 28px;
+}
+.font-size-32{
+    font-size: 32px;
+}
+.font-size-56{
+    font-size: 56px;
+}
+.font-size-16{
+    font-size: 16px;
+}
+.font-size-18{
+    font-size: 18px;
+}
+.font-size-48{
+    font-size: 48px;
+}
+.font-size-82{
+    font-size: 82px;
+}
+.font-size-0{
+    font-size: 0;
+}
+.font-color-9{
+    color: #999;
+}
+
+.font-weight-600{
+    font-weight: 600;
+}
+.font-weight-500{
+    font-weight: 500;
+}
+.font-weight-400{
+    font-weight: 400;
+}
+.font-size-36{
+    font-size: 36px;
+}
+
+.text-center{
+    text-align: center;
+}
+.text-right{
+    text-align: right;
+}
+.text-justify{
+    text-align: justify;
+}

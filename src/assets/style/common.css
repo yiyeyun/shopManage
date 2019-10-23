@@ -1,0 +1,92 @@
+html, body{
+    height: 100%;
+}
+.border-danger{
+    border: 1px solid #ff5a60;
+}
+
+.text-danger{
+    color: #ff5a60;
+}
+
+.border-default{
+    border: 1px solid #eee;
+}
+.button{
+  color: #999;
+  font-size: 34px;
+  background: none;
+  padding: 0;
+  border: none;
+  line-height: normal;
+  border-radius: 0;
+}
+.bottom-line{
+    border-bottom: 2px solid #F6F6F6;
+}
+.bottom-line-20{
+    border-bottom: 20px solid #F6F6F6;
+}
+.top-line{
+    border-top: 2px solid #f6f6f6;
+}
+.btn-block{
+    width: 100%;
+}
+.btn{
+    height: 88px;
+    text-align: center;
+    line-height: 88px;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 500;
+}
+.btn-danger{
+    background:#F43E42;
+}
+.btn-round{
+    border-radius: 44px;
+}
+.placeholder-style{
+    font-size: 32px;
+    font-weight: 400;
+    color: #979797;
+}
+.hover-default{
+    background: #fff;
+    color: #666;
+}
+.invite-button{
+    height: 88px;
+    border-radius: 88px;
+    line-height: 88px;
+    font-size: 32px;
+    font-weight: 500;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(to right, #E9CA97, #CF9B5D);
+}
+.tag{
+    padding: 0 4px;
+    color: #D7A148;
+    border-radius: 6px;
+    font-size: 20px;
+    border: 2px solid #D7A148;
+}
+.tag-plain{
+    background: #D7A148;
+    color: #fff;
+}
+.full-width{
+    width: 100%;
+}
+.relative{
+  position: relative;
+}
+
+
+
+.mpm-radio-icon{
+  color: #CF9B5D!important;
+  font-size:32px!important;
+}
