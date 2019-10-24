@@ -11,7 +11,12 @@ export default new Router({
     {
       path: '/',
       component: () => import('../views/home'),
-      hidden: true
+      children: [
+        {
+          path: '/goods-list',
+          component: () => import('@/views/goods-manage/goods-list')
+        }
+      ]
     },
     {
       path: '/bind-shop',
