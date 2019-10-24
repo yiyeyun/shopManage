@@ -2,22 +2,20 @@
   <div class="box" :class="isExpend? 'expend' : ''">
     <div class="menu-box">
       <el-menu
-        default-active="1-1"
         class="el-menu-vertical-demo"
         background-color="#2d3a4b"
         :collapse="!isExpend"
         text-color="#fff"
         active-text-color="#ffd04b"
         :unique-opened="true"
-        @open="handleOpen"
-        @close="handleClose"
+        @select="select"
       >
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-goods" />
             <span>商品管理</span>
           </template>
-          <el-menu-item index="1-1">商品列表</el-menu-item>
+          <el-menu-item index="/goods-list">商品列表</el-menu-item>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
@@ -56,11 +54,11 @@ export default {
     }
   },
   methods: {
-    handleOpen(e) {
-      console.log(1, e)
-    },
-    handleClose(e) {
-      console.log(2, e)
+    select(path) {
+      const router = this.$route.path
+      if (router !== path) {
+        this.$router.push({ path })
+      }
     }
   }
 }

@@ -100,3 +100,6 @@ html, body{
     font-size: 14px;
     text-align: right;
 }
+.pointer{
+    cursor: pointer;
+}

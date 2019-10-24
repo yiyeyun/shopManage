@@ -1,7 +1,11 @@
 <template>
   <div class="login">
-    <img :src="qrCode" class="img" alt="">
-    <div class="text">微信扫一扫登入</div>
+    <div v-if="!codeIsValidate" class="code-invalid">二维码失效</div>
+    <img v-else :src="qrCode" class="img" alt="">
+    <div v-if="codeIsValidate" class="text">微信扫一扫登入</div>
+    <div v-else class="mt20">
+      <el-button type="warning" class="mt20" @click="getQrcode">刷新二维码</el-button>
+    </div>
   </div>
 </template>
 
@@ -17,27 +21,41 @@ export default {
   name: 'Index',
   data() {
     return {
-      qrCode: ''
+      qrCode: '',
+      codeIsValidate: true,
+      loginInterval: null
     }
   },
   mounted() {
-    getQrcode().then(res => {
-      this.qrCode = res.data
-      this.isLoginInterval()
-    })
+    this.getQrcode()
+  },
+  destroyed() {
+    clearInterval(this.loginInterval)
   },
   methods: {
+    getQrcode() {
+      getQrcode().then(res => {
+        this.qrCode = res.data
+        this.codeIsValidate = true
+        this.isLoginInterval()
+        setTimeout(() => {
+          clearInterval(this.loginInterval)
+          this.codeIsValidate = false
+        }, 1000 * 60 * 5)
+      })
+    },
     isLoginInterval() {
       this.loginInterval = setInterval(() => {
         isLogin()
           .then(res => {
             if (res) {
+              console.log(res)
               clearInterval(this.loginInterval)
               setToken(res.data.token)
               if (res.data.status === 1) {
-                this.$router.push({ path: '/bind-shop' })
+                this.$router.replace({ path: '/bind-shop' })
               } else {
-                this.$router.push({ path: '/' })
+                this.$router.replace({ path: '/' })
               }
             }
           })
@@ -59,6 +77,13 @@ export default {
   .img{
     width: 200px;
     height: 200px;
+  }
+  .code-invalid{
+      width: 200px;
+      height: 200px;
+      background: #fff;
+      text-align: center;
+      line-height: 200px;
   }
   .text{
     margin-top: 20px;
