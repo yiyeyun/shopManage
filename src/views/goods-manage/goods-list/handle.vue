@@ -1,50 +1,76 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="90px">
-      <el-form-item label="商品标题">
+    <el-form ref="form" :model="form" label-width="90px" :rules="rules">
+      <el-form-item label="商品标题" prop="title">
         <el-input v-model="form.title" />
       </el-form-item>
-      <el-form-item label="商品类目">
+      <el-form-item label="商品类目" prop="cid">
         <el-select v-model="form.cid" placeholder="请选择类目">
-          <el-option label="区域一" value="shanghai" />
-          <el-option label="区域二" value="beijing" />
+          <el-option v-for="item in catList" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="商品条形码">
+      <el-form-item label="商品条形码" prop="barcode">
         <el-input v-model="form.barcode" />
       </el-form-item>
-      <el-form-item label="商品库存">
-        <el-input v-model="form.num" />
+      <el-form-item label="商品库存" prop="num">
+        <el-input v-model.number="form.num" />
       </el-form-item>
-      <el-form-item label="商品价格">
-        <el-input v-model="form.price" />
+      <el-form-item label="商品价格" prop="price">
+        <el-input v-model.number="form.price" />
       </el-form-item>
-      <el-form-item label="商品图片">
-        <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+      <el-form-item label="商品图片" required>
+        <idol-qiniu-upload
           list-type="picture-card"
+          :limit="3"
+          :file-list="form.image"
+          @upload-success="goodsPicUpload(arguments)"
+          @remove="goodsPicRemove(arguments)"
         >
           <i class="el-icon-plus" />
-        </el-upload>
+        </idol-qiniu-upload>
       </el-form-item>
       <el-form-item label="商品详情">
-        <el-input  type="textarea" v-model="form.itemDesc" />
+        <el-input v-model="form.sellPoint" type="textarea" />
       </el-form-item>
+
+      <el-form-item label="详情图片">
+        <idol-qiniu-upload
+          list-type="picture-card"
+          :limit="6"
+          :file-list="form.itemImageList"
+          @upload-success="detailPicUpload(arguments)"
+          @remove="detailPicRemove(arguments)"
+        >
+          <i class="el-icon-plus" />
+        </idol-qiniu-upload>
+      </el-form-item>
+
       <el-form-item label="">
-        <el-button :type="type=== 'add' ? 'warning': 'primary'" size="mini">提交</el-button>
+        <el-button
+          :type="type=== 'add' ? 'warning': 'primary'"
+          size="mini"
+          @click="submit"
+        >提交</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import qiniuUplad from '@/components/pic-upload/qiniu-upload'
+import { getCatList, productAdd, getProductDetail } from '../../../api/product'
+
 export default {
   name: 'Handle',
+  components: {
+    idolQiniuUpload: qiniuUplad
+  },
   props: {
     type: {
       type: String,
       value: 'add'
-    }
+    },
+    id: Number
   },
   data() {
     return {
@@ -53,15 +79,103 @@ export default {
         barcode: '',
         price: '',
         image: [],
-        itemDesc: '',
+        itemImageList: [],
+        sellPoint: '',
         num: '',
         cid: ''
+      },
+      catList: [],
+      rules: {
+        title: [
+          { required: true, message: '请输入商品标题', trigger: 'blur' }
+          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        barcode: [
+          { required: true, message: '请输入商品条形码', trigger: 'blur' }
+        ],
+        price: [
+          { required: true, message: '商品价格不能为空' },
+          { type: 'number', message: '商品价格必须为数字' }
+          // { type: 'number', required: true, message: '请输入商品价格', trigger: 'blur' }
+        ],
+        cid: [
+          { required: true, message: '请选择商品类目', trigger: 'change' }
+        ],
+        num: [
+          { required: true, message: '库存不能为空' },
+          { type: 'number', message: '库存必须为数字' }
+          // { type: 'number', required: true, message: '请输入库存', trigger: 'blur' }
+        ]
       }
+    }
+  },
+  watch: {
+    id: {
+      async handler(data) {
+        if (this.type === 'edit') {
+          const res = await getProductDetail(data)
+        }
+      },
+      immediate: true
+    }
+  },
+  async mounted() {
+    const list = await getCatList()
+    this.catList = list.data
+  },
+  methods: {
+    removePicHandle(path, groups) {
+      const arr = []
+      groups.forEach(item => {
+        if (path !== item) {
+          arr.push(item)
+        }
+      })
+      return arr
+    },
+    submit() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          console.log(this.form)
+          productAdd(this.form)
+            .then(res => {
+              if (this.type === 'add') {
+                this.$emit('add-success')
+              } else {
+                this.$emit('edit-success')
+              }
+              this.$message.success('提交成功')
+            })
+        }
+      })
+    },
+    goodsPicUpload(e) {
+      console.log('goodsPicUpload', e)
+      this.form.image.push(e[0])
+    },
+    goodsPicRemove(e) {
+      console.log('goodsPicRemove', e)
+      this.form.image = this.removePicHandle(e[0], this.form.image)
+    },
+    detailPicUpload(e) {
+      console.log('detailPicUpload', e)
+      this.form.itemImageList.push(e[0])
+    },
+    detailPicRemove(e) {
+      console.log('detailPicRemove', e)
+      this.form.itemImageList = this.removePicHandle(e[0], this.form.itemImageList)
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  /deep/ .el-upload-list--picture-card .el-upload-list__item,
+  /deep/ .el-upload--picture-card{
+    width: 60px;
+    height: 60px;
+  }
+  /deep/ .el-upload--picture-card{
+    line-height: 68px;
+  }
 </style>

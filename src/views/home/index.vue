@@ -1,6 +1,9 @@
 <template>
   <div class="box" :class="isExpend? 'expend' : ''">
     <div class="menu-box">
+      <div class="pic-box">
+        <img src="@/assets/imgs/logo.jpg" class="logo" alt="">
+      </div>
       <el-menu
         class="el-menu-vertical-demo"
         background-color="#2d3a4b"
@@ -34,7 +37,7 @@
       </el-menu>
     </div>
 
-    <div class="flex-1 flex flex-column">
+    <div class="flex-1 flex flex-column over-hidden">
       <top class="bottom-line" :is-expend="isExpend" @onchange="isExpend = !isExpend" />
       <div class="flex-1">
         <router-view />
@@ -68,6 +71,16 @@ export default {
 .box{
     height: 100%;
     display: flex;
+}
+.pic-box{
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  .logo{
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+  }
 }
 .menu-box{
   transition: width 500ms linear;

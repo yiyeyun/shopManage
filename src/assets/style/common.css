@@ -103,3 +103,6 @@ html, body{
 .pointer{
     cursor: pointer;
 }
+.over-hidden{
+    overflow: hidden;
+}

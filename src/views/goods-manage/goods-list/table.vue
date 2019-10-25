@@ -25,11 +25,17 @@
         align="center"
         label="价格（元）"
       />
-      <el-table-column label="图片" align="center">
+      <el-table-column label="图片" align="center" width="80px">
         <template slot-scope="scope">
           <div v-viewer="{movable: false}" class="images pointer" @click="previewImg">
-            <img v-for="(item, index) in scope.row.image" v-show="index === 0" class="table-pic" :src="item">
-            <small class="text-primary ml10">(剩余{{ scope.row.image.length-1 }}张)</small>
+            <img
+              v-for="(item, index) in scope.row.image"
+              v-show="index === 0"
+              :key="index"
+              class="table-pic"
+              :src="item"
+            >
+            <small class="text-primary ml10" v-show="scope.row.image.length-1">(剩余{{ scope.row.image.length-1 }}张)</small>
           </div>
           <!--<img v-for="item in scope.row.image" class="table-pic" :src="item" alt="">-->
         </template>
@@ -51,10 +57,10 @@
         width="160px"
       />
 
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="150px">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini">删除</el-button>
-          <el-button type="primary" size="mini">编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleteItem(scope.row.id)">删除</el-button>
+          <el-button type="primary" size="mini" @click="edit(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,8 +78,17 @@ export default {
   },
   methods: {
     previewImg() {
+      const viewerInstance = document.getElementsByClassName('viewer-container')
+      viewerInstance[0].remove()
+      console.log(viewerInstance)
       const viewer = this.$el.querySelector('.images').$viewer
       viewer.show()
+    },
+    edit(id) {
+      this.$emit('edit-item', id)
+    },
+    deleteItem(id) {
+      this.$emit('delete-item', id)
     }
   }
 }
