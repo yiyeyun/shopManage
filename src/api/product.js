@@ -27,6 +27,14 @@ export function productAdd(data) {
   })
 }
 
+export function productUpdate(data, id) {
+  return request({
+    url: `app/product/update`,
+    method: 'post',
+    data
+  })
+}
+
 export function getProductDetail(id) {
   return request({
     url: `app/product/findDescript/${id}`

@@ -12,6 +12,7 @@
     <!--</div>-->
     <el-upload
       class="upload-pic"
+      ref="upload"
       :action="domain"
       :data="QiniuData"
       :list-type="listType"
@@ -55,6 +56,21 @@ export default {
     fileList: {
       type: Array,
       value: []
+    }
+  },
+  watch: {
+    fileList(data) {
+      console.log('img', data)
+      if (!data.length) {
+        this.$refs.upload.clearFiles()
+      } else {
+        this.list = data.map(item => {
+          return {
+            name: `pic_${parseInt(Math.random() * 10000)}.jpeg`,
+            url: item
+          }
+        })
+      }
     }
   },
   data() {

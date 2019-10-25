@@ -25,7 +25,7 @@
             <i class="el-icon-menu" />
             <span>提货券管理</span>
           </template>
-          <el-menu-item index="2-1">提货券管理</el-menu-item>
+          <el-menu-item index="/voucher-list">提货券列表</el-menu-item>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">

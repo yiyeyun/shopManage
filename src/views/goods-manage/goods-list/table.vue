@@ -27,7 +27,7 @@
       />
       <el-table-column label="图片" align="center" width="80px">
         <template slot-scope="scope">
-          <div v-viewer="{movable: false}" class="images pointer" @click="previewImg">
+          <div v-viewer="{movable: false}" class="images pointer" :class="'v-viewer-' + scope.$index" @click="previewImg(scope)">
             <img
               v-for="(item, index) in scope.row.image"
               v-show="index === 0"
@@ -77,11 +77,13 @@ export default {
     }
   },
   methods: {
-    previewImg() {
-      const viewerInstance = document.getElementsByClassName('viewer-container')
-      viewerInstance[0].remove()
-      console.log(viewerInstance)
-      const viewer = this.$el.querySelector('.images').$viewer
+    previewImg(data) {
+      console.log(data)
+      // const viewerInstance = document.getElementsByClassName('viewer-container')
+      // viewerInstance[0].remove()
+      // console.log(viewerInstance)
+      const className = `.v-viewer-${data.$index}`
+      const viewer = this.$el.querySelector(className).$viewer
       viewer.show()
     },
     edit(id) {

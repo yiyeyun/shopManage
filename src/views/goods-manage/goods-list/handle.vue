@@ -2,7 +2,7 @@
   <div>
     <el-form ref="form" :model="form" label-width="90px" :rules="rules">
       <el-form-item label="商品标题" prop="title">
-        <el-input v-model="form.title" />
+        <el-input v-model="form.title" :disabled="type === 'edit'" />
       </el-form-item>
       <el-form-item label="商品类目" prop="cid">
         <el-select v-model="form.cid" placeholder="请选择类目">
@@ -58,7 +58,7 @@
 
 <script>
 import qiniuUplad from '@/components/pic-upload/qiniu-upload'
-import { getCatList, productAdd, getProductDetail } from '../../../api/product'
+import { getCatList, productAdd, productUpdate, getProductDetail } from '../../../api/product'
 
 export default {
   name: 'Handle',
@@ -70,10 +70,12 @@ export default {
       type: String,
       value: 'add'
     },
-    id: Number
+    id: String,
+    dialog: Boolean
   },
   data() {
     return {
+      pid: '',
       form: {
         title: '',
         barcode: '',
@@ -112,11 +114,34 @@ export default {
   watch: {
     id: {
       async handler(data) {
-        if (this.type === 'edit') {
-          const res = await getProductDetail(data)
+        if (this.type === 'edit' && data) {
+          try {
+            const res = await getProductDetail(data)
+            this.pid = res.data.id
+            this.form.title = res.data.title
+            this.form.barcode = res.data.barcode
+            this.form.price = +res.data.price
+            this.form.sellPoint = res.data.sellPoint
+            this.form.num = +res.data.num
+            this.form.cid = res.data.categoryName
+            this.form.image = res.data.image
+            this.form.itemImageList = res.data.itemImageList
+            // const list = await getCatList()
+          } catch (e) {
+            console.log(e)
+          }
         }
       },
       immediate: true
+    },
+    dialog(data) {
+      if (!data) {
+        this.$refs['form'].resetFields()
+        console.log(this.form)
+        this.form.image = []
+        this.form.sellPoint = ''
+        this.form.itemImageList = []
+      }
     }
   },
   async mounted() {
@@ -134,18 +159,21 @@ export default {
       return arr
     },
     submit() {
-      this.$refs['form'].validate((valid) => {
+      this.$refs['form'].validate(async(valid) => {
         if (valid) {
-          console.log(this.form)
-          productAdd(this.form)
-            .then(res => {
-              if (this.type === 'add') {
-                this.$emit('add-success')
-              } else {
-                this.$emit('edit-success')
-              }
-              this.$message.success('提交成功')
-            })
+          try {
+            if (this.type === 'add') {
+              await productAdd(this.form)
+              this.$emit('add-success')
+            } else {
+              await productUpdate(this.form, this.pid)
+              this.$emit('edit-success')
+            }
+
+            this.$message.success('提交成功')
+          } catch (e) {
+            console.log(e)
+          }
         }
       })
     },

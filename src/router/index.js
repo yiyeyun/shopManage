@@ -19,6 +19,10 @@ export default new Router({
         {
           path: '/goods-list',
           component: () => import('@/views/goods-manage/goods-list')
+        },
+        {
+          path: '/voucher-list',
+          component: () => import('@/views/voucher-manage/voucher-list')
         }
       ]
     },

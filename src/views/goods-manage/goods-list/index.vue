@@ -11,12 +11,15 @@
     <el-dialog
       :title="type === 'add' ? '添加商品': '编辑商品'"
       :visible.sync="goodsDialog"
+      @close="editId = ''"
       width="600px"
     >
       <idol-handle
         :id="editId"
+        :dialog="goodsDialog"
         :type="type"
         @add-success="addSuccess"
+        @edit-success="editSuccess"
       />
     </el-dialog>
   </div>
@@ -55,6 +58,10 @@ export default {
       this.goodsDialog = true
     },
     addSuccess() {
+      this.getList()
+      this.goodsDialog = false
+    },
+    editSuccess() {
       this.getList()
       this.goodsDialog = false
     },
