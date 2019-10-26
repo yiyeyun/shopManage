@@ -1,6 +1,6 @@
 import request from '@/utils/request'
-export function getList() {
+export function getList({ pageNum, pageSize }) {
   return request({
-    url: `app/oucher/template/list`
+    url: `app/voucher/store/list/${pageNum}/${pageSize}`
   })
 }

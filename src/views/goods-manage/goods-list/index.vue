@@ -22,6 +22,14 @@
         @edit-success="editSuccess"
       />
     </el-dialog>
+    <el-pagination
+      background
+      class="mt10"
+      :page-size="params.pageSize"
+      @current-change="pageChange"
+      layout="prev, pager, next"
+      :total="pageTotal">
+    </el-pagination>
   </div>
 </template>
 
@@ -39,6 +47,11 @@ export default {
     return {
       list: [],
       type: 'add',
+      params: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      pageTotal: 0,
       goodsDialog: false,
       editId: ''
     }
@@ -47,11 +60,16 @@ export default {
     this.getList()
   },
   methods: {
-    getList() {
-      getList().then(res => {
-        console.log(res)
-        this.list = res.data
-      })
+    async getList() {
+      const list = await getList(this.params)
+      this.list = list.data
+      console.log(list.total)
+      this.pageTotal = list.total
+    },
+    pageChange(e) {
+      console.log(e)
+      this.params.pageNum = e
+      this.getList()
     },
     addGoods() {
       this.type = 'add'

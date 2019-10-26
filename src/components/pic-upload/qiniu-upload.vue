@@ -11,8 +11,8 @@
     <!--<el-button type="info" plain>取消</el-button>-->
     <!--</div>-->
     <el-upload
-      class="upload-pic"
       ref="upload"
+      class="upload-pic"
       :action="domain"
       :data="QiniuData"
       :list-type="listType"
@@ -58,21 +58,6 @@ export default {
       value: []
     }
   },
-  watch: {
-    fileList(data) {
-      console.log('img', data)
-      if (!data.length) {
-        this.$refs.upload.clearFiles()
-      } else {
-        this.list = data.map(item => {
-          return {
-            name: `pic_${parseInt(Math.random() * 10000)}.jpeg`,
-            url: item
-          }
-        })
-      }
-    }
-  },
   data() {
     return {
       loading: false,
@@ -95,6 +80,22 @@ export default {
     //     }
     //   })
     // }
+  },
+  watch: {
+    fileList(data) {
+      console.log('img', data)
+      if (!data.length) {
+        this.$refs.upload.clearFiles()
+        this.list = []
+      } else if (data.length && !this.list.length) {
+        this.list = data.map(item => {
+          return {
+            name: `pic_${parseInt(Math.random() * 10000)}.jpeg`,
+            url: item
+          }
+        })
+      }
+    }
   },
   mounted() {
     this.getQiniuToken()

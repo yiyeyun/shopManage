@@ -1,7 +1,7 @@
 import request from '@/utils/request'
-export function getList() {
+export function getList({ pageNum, pageSize }) {
   return request({
-    url: `app/product/list`,
+    url: `app/product/list/${pageNum}/${pageSize}`,
     method: 'post'
   })
 }
@@ -27,11 +27,14 @@ export function productAdd(data) {
   })
 }
 
-export function productUpdate(data, id) {
+export function productUpdate(data, pid) {
   return request({
     url: `app/product/update`,
     method: 'post',
-    data
+    data: {
+      ...data,
+      pid
+    }
   })
 }
 

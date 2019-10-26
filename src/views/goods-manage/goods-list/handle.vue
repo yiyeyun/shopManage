@@ -1,15 +1,15 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="90px" :rules="rules">
+    <el-form ref="form" :model="form" label-width="100px" :rules="rules">
       <el-form-item label="商品标题" prop="title">
         <el-input v-model="form.title" :disabled="type === 'edit'" />
       </el-form-item>
       <el-form-item label="商品类目" prop="cid">
         <el-select v-model="form.cid" placeholder="请选择类目">
-          <el-option v-for="item in catList" :label="item.name" :value="item.id" />
+          <el-option v-for="item in catList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="商品条形码" prop="barcode">
+      <el-form-item label="商品条形码">
         <el-input v-model="form.barcode" />
       </el-form-item>
       <el-form-item label="商品库存" prop="num">
@@ -29,7 +29,7 @@
           <i class="el-icon-plus" />
         </idol-qiniu-upload>
       </el-form-item>
-      <el-form-item label="商品详情">
+      <el-form-item label="商品描述">
         <el-input v-model="form.sellPoint" type="textarea" />
       </el-form-item>
 
@@ -92,9 +92,6 @@ export default {
           { required: true, message: '请输入商品标题', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
-        barcode: [
-          { required: true, message: '请输入商品条形码', trigger: 'blur' }
-        ],
         price: [
           { required: true, message: '商品价格不能为空' },
           { type: 'number', message: '商品价格必须为数字' }
@@ -123,7 +120,7 @@ export default {
             this.form.price = +res.data.price
             this.form.sellPoint = res.data.sellPoint
             this.form.num = +res.data.num
-            this.form.cid = res.data.categoryName
+            this.form.cid = +res.data.cid
             this.form.image = res.data.image
             this.form.itemImageList = res.data.itemImageList
             // const list = await getCatList()
