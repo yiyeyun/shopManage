@@ -4,3 +4,8 @@ export function getList({ pageNum, pageSize }) {
     url: `app/voucher/store/list/${pageNum}/${pageSize}`
   })
 }
+export function getTemplateList() {
+  return request({
+    url: `app/voucher/template/list`
+  })
+}

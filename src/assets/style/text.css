@@ -70,6 +70,10 @@
     font-weight: 400;
     color: #999;
 }
+.font-14-333{
+    font-size: 14px;
+    color: #333;
+}
 .font-14-999{
     font-size: 14px;
     color: #999;
@@ -172,6 +176,9 @@
 }
 .font-size-26{
     font-size: 26px;
+}
+.font-size-12{
+    font-size: 12px;
 }
 .font-size-20{
     font-size: 20px;

@@ -2,7 +2,7 @@
   <div class="box" :class="isExpend? 'expend' : ''">
     <div class="menu-box">
       <div class="pic-box">
-        <img src="@/assets/imgs/logo.jpg" class="logo" alt="">
+        <!--<img src="@/assets/imgs/logo.jpg" class="logo" alt="">-->
       </div>
       <el-menu
         class="el-menu-vertical-demo"
@@ -33,6 +33,13 @@
             <span>订单管理</span>
           </template>
           <el-menu-item index="3-1">订单管理</el-menu-item>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-tickets" />
+            <span>商家管理</span>
+          </template>
+          <el-menu-item index="4-1">地址管理</el-menu-item>
         </el-submenu>
       </el-menu>
     </div>

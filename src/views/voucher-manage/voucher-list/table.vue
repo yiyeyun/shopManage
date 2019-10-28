@@ -6,50 +6,51 @@
       style="width: 100%"
     >
       <el-table-column
-        prop="title"
+        prop="name"
         align="center"
-        label="商品名称"
+        label="名称"
       />
       <el-table-column
-        prop="barcode"
+        prop="bindProductSize"
         align="center"
-        label="商品条形码"
+        label="数量"
       />
       <el-table-column
-        prop="categoryName"
+        prop="bindProductPrice"
         align="center"
-        label="类目"
+        label="商品价格（元）"
       />
       <el-table-column
         prop="price"
         align="center"
-        label="价格（元）"
+        label="模板价格（元）"
       />
-      <el-table-column label="图片" align="center" width="80px">
+      <el-table-column label="模板图片" align="center" width="80px">
         <template slot-scope="scope">
           <div v-viewer="{movable: false}" class="images pointer" :class="'v-viewer-' + scope.$index" @click="previewImg(scope)">
             <img
-              v-for="(item, index) in scope.row.image"
+              v-for="(item, index) in scope.row.imgList"
               v-show="index === 0"
               :key="index"
               class="table-pic"
               :src="item"
             >
-            <small v-show="scope.row.image.length-1" class="text-primary ml10">(剩余{{ scope.row.image.length-1 }}张)</small>
+            <small v-show="scope.row.imgList.length-1" class="text-primary ml10">(剩余{{ scope.row.imgList.length-1 }}张)</small>
           </div>
           <!--<img v-for="item in scope.row.image" class="table-pic" :src="item" alt="">-->
         </template>
       </el-table-column>
 
       <el-table-column
-        prop="num"
+        prop="price"
         align="center"
-        label="库存"
-      />
-      <!--<el-table-column-->
-      <!--prop="updated"-->
-      <!--label="更新时间"-->
-      <!--/>-->
+        label="自定义参数"
+      >
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="viewParams(scope.row.paramDataMap)">查看</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="created"
         label="创建时间"
@@ -60,10 +61,20 @@
       <el-table-column label="操作" align="center" width="150px">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" @click="deleteItem(scope.row.id)">删除</el-button>
-          <el-button type="primary" size="mini" @click="edit(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      title="自定义参数"
+      :visible.sync="paramsDialog"
+      width="600px"
+      @close="paramsData=[]"
+    >
+      <div class="flex mb20" v-for="item in paramsData" :key="item.key">
+        <div class="font-14-999 width-100 mr20 text-right">{{item.key}}</div>
+        <div class="font-14-333 font-weight-600">{{item.value}}</div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -76,19 +87,30 @@ export default {
       value: []
     }
   },
+  data() {
+    return {
+      paramsDialog: false,
+      paramsData: []
+    }
+  },
   methods: {
     previewImg(data) {
       console.log(data)
-      // const viewerInstance = document.getElementsByClassName('viewer-container')
-      // viewerInstance[0].remove()
-      // console.log(viewerInstance)
       const className = `.v-viewer-${data.$index}`
       const viewer = this.$el.querySelector(className).$viewer
       viewer.show()
     },
-    edit(id) {
-      this.$emit('edit-item', id)
+    viewParams(data) {
+      this.paramsData = []
+      for (const key in data) {
+        this.paramsData.push({
+          key,
+          value: data[key]
+        })
+      }
+      this.paramsDialog = true
     },
+
     deleteItem(id) {
       this.$emit('delete-item', id)
     }
