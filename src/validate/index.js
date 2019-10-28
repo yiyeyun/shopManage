@@ -22,27 +22,7 @@ export function validatePhone(value) {
   })
 }
 
-// 验证验证码
-export function validateAuthCode(value) {
-  if (!(value && (value + '').trim())) {
-    return false
-  }
-  if (!/^\d{6}$/.test(value)) {
-    return false
-  }
-  return true
-}
 
-// 邀请码验证
-export function validateInviteCode(value) {
-  if (!(value && (value + '').trim())) {
-    return false
-  }
-  if (!/^\d{8}$/.test(value)) {
-    return false
-  }
-  return true
-}
 
 // 不为空验证
 export function validateNotNull(value, type) {
@@ -68,17 +48,6 @@ export function validateTextLength(value, name, min, max) {
     return false
   }
   if (max && length > max) {
-    return false
-  }
-  return true
-}
-
-// 验证收货人姓名
-export function validateReceiveName(value) {
-  if (!value) {
-    return false
-  }
-  if (!/^[\u4e00-\u9fa5]{2,15}$/.test(value)) {
     return false
   }
   return true

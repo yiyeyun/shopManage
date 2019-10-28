@@ -16,7 +16,7 @@
             :key="item.templateId"
             :class="item.templateId === form.templateId ? 'active': ''"
             class="flex flex-column model mr10 align-center"
-            @click="selectTemplate(item.templateId)"
+            @click="selectTemplate(item)"
           >
             <el-radio
               v-show="false"
@@ -29,13 +29,27 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="其他参数">
-        <el-button type="primary" size="mini" @click="addParam">添加参数</el-button>
-        <div v-for="(item, index) in paramDataKey" class="flex mb10" :key="index">
-          <el-button type="danger" size="mini" @click="deleteParam(index)">删除</el-button>
-          <el-input v-model="paramDataKey[index]" placeholder="请输入参数名" class="ml10 flex-1 mr10"/>
-          <el-input v-model="paramDataValue[index]" placeholder="请输入参数值" class="flex-1"/>
+      <el-form-item v-show="paramDataKey.length" label="其他参数">
+        <!--<el-button type="primary" size="mini" @click="addParam">添加参数</el-button>-->
+        <div v-for="(item, index) in paramDataKey" :key="index" class="flex mb10">
+          <!--<el-button type="danger" size="mini" @click="deleteParam(index)">删除</el-button>-->
+          <!--<el-input v-model="paramDataKey[index]" placeholder="请输入参数名" class="ml10 flex-1 mr10"/>-->
+          <span class="text-right mr10">{{ item }}</span>
+          <el-input v-model="paramDataValue[index]" :placeholder="'请输入' + item" class="flex-1" />
         </div>
+      </el-form-item>
+      <el-form-item label="绑定商品">
+        <el-select v-model="form.productList" multiple placeholder="请选择">
+          <el-option
+            v-for="item in productList"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="warning" size="mini" @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
 
@@ -44,11 +58,23 @@
 
 <script>
 import {
-  getTemplateList
+  getTemplateList,
+  voucherHandle
 } from '../../../api/voucher'
+import {
+  getList
+} from '../../../api/product'
+import {
+  validateNotNull
+} from '../../../validate'
 
 export default {
   name: 'Handle',
+  props: {
+    voucherId: String,
+    type: String,
+    dialog: Boolean
+  },
   data() {
     return {
       templateList: [],
@@ -58,13 +84,28 @@ export default {
       form: {
         name: '',
         templateId: '',
-        paramData: {}
+        paramData: {},
+        productList: []
       },
-      rules: {}
+      rules: {},
+      productList: []
     }
   },
-  mounted() {
+  watch: {
+    dialog(data) {
+      if (!data) {
+        this.form.name = ''
+        this.form.templateId = ''
+        this.form.paramData = {}
+        this.form.productList = []
+      }
+    }
+  },
+  async mounted() {
     this.getTemplateList()
+    const list = await getList({ pageNum: 1, pageSize: 100 })
+    console.log(333, list)
+    this.productList = list.data
   },
   methods: {
     async getTemplateList() {
@@ -79,16 +120,48 @@ export default {
       this.$emit('view-detail', data)
       // this.templateData = data
     },
-    deleteParam(index) {
-      this.paramDataKey.splice(index, 1)
-      this.paramDataValue.splice(index, 1)
+    // deleteParam(index) {
+    //   this.paramDataKey.splice(index, 1)
+    //   this.paramDataValue.splice(index, 1)
+    // },
+    // addParam() {
+    //   this.paramDataKey.push('')
+    //   this.paramDataValue.push('')
+    // },
+    submit() {
+      console.log(this.form)
+      this.paramDataKey.forEach((item, index) => {
+        this.form.paramData[item] = this.paramDataValue[index]
+      })
+      validateNotNull(this.form.name, '模版名称不能为空')
+        .then(() => {
+          return validateNotNull(this.form.templateId, '模版未选择')
+        })
+        .then(() => {
+          return validateNotNull(this.form.productList.length, '未绑定商品')
+        })
+        .then(() => {
+          console.log(this.type, 555)
+          if (this.type === 'add') {
+            return voucherHandle(this.form)
+          }
+        })
+        .then(res => {
+          if (this.type === 'add') {
+            this.$emit('add-success')
+          } else {
+            this.$emit('edit-success')
+          }
+        })
     },
-    addParam() {
-      this.paramDataKey.push('')
-      this.paramDataValue.push('')
-    },
-    selectTemplate(id) {
-      this.form.templateId = id
+    selectTemplate(data) {
+      this.paramDataKey = []
+      this.paramDataValue = []
+      this.form.templateId = data.templateId
+      data.paramData.forEach(item => {
+        this.paramDataKey.push(item)
+        this.paramDataValue.push('')
+      })
     }
   }
 }
@@ -110,4 +183,7 @@ export default {
   .active{
     background: #bcdeff;
   }
+    /deep/ .el-select{
+        width: 100%;
+    }
 </style>

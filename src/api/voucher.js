@@ -9,3 +9,10 @@ export function getTemplateList() {
     url: `app/voucher/template/list`
   })
 }
+export function voucherHandle(data) {
+  return request({
+    url: `app/voucher/createOrUpdate`,
+    data,
+    method: 'post'
+  })
+}

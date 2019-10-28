@@ -13,11 +13,15 @@
       @current-change="pageChange"
     />
     <el-dialog
-      title="创建提货券"
+      :title="handleType === 'add' ? '创建提货券' : '编辑提货券'"
       :visible.sync="voucherDialog"
       width="600px"
     >
-      <idol-handle @view-detail="viewDetail" />
+      <idol-handle @view-detail="viewDetail"
+                   :dialog="voucherDialog"
+                   @edit-success="editSuccess"
+                   @add-success="addSuccess"
+                   :type="handleType"/>
     </el-dialog>
     <el-dialog
       title="模板详情"
@@ -82,6 +86,7 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
+      handleType: 'add',
       voucherDialog: false,
       pageTotal: 0,
       templateData: {},
@@ -99,6 +104,16 @@ export default {
     },
     voucherCreate() {
       this.voucherDialog = true
+      this.handleType = 'add'
+    },
+    addSuccess() {
+      this.params.pageNum = 1
+      this.getList()
+      this.voucherDialog = false
+    },
+    editSuccess() {
+      this.getList()
+      this.voucherDialog = false
     },
     pageChange(page) {
       this.params.pageNum = page
