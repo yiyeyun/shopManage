@@ -37,8 +37,8 @@
         width="150px"
       >
         <template slot-scope="scope">
-          <el-button type="primary" size="mini">编辑</el-button>
-          <el-button type="danger" size="mini">删除</el-button>
+          <el-button type="primary" size="mini" @click="editItem(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleteItem(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,6 +50,14 @@ export default {
   name: 'Table',
   props: {
     list: Array
+  },
+  methods: {
+    editItem(data) {
+      this.$emit('edit-item', data)
+    },
+    deleteItem(id) {
+      // this.$emit('delete-item', id)
+    }
   }
 }
 </script>

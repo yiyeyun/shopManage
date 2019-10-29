@@ -15,9 +15,11 @@ export function addressHandle(data, id) {
   if (id) {
     data.addressId = id
   }
+  data.receiverZip = '000000'
   return request({
     url: `app/address/createOrUpdate`,
-    data
+    data,
+    method: 'post'
   })
 }
 

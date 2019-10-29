@@ -13,6 +13,7 @@
       <div class="flex align-center mt20">
         <div class="label-80 mr10">地址选择</div>
         <VDistpicker
+          @selected="onSelect"
           :province="address.province"
           :city="address.city"
           :area="address.area"
@@ -71,9 +72,9 @@ export default {
   data() {
     return {
       address: {
-        province: '广东省',
-        city: '广州市',
-        area: '海珠区'
+        province: '',
+        city: '',
+        area: ''
       },
       storeAddress: '',
       storeName: '',
@@ -84,16 +85,21 @@ export default {
     }
   },
   methods: {
+    onSelect(data) {
+      this.address.province = data.province.value
+      this.address.city = data.city.value
+      this.address.area = data.area.value
+    },
     submit() {
       validatePhone(this.phone)
         .then(() => {
-          return validateNotNull(this.address.province, '省未选择')
+          return validateNotNull(this.address.province, '地区未选择')
         })
         .then(() => {
-          return validateNotNull(this.address.city, '市未选择')
+          return validateNotNull(this.address.city, '地区未选择')
         })
         .then(() => {
-          return validateNotNull(this.address.area, '区未选择')
+          return validateNotNull(this.address.area, '地区未选择')
         })
         .then(() => {
           return validateNotNull(this.storeAddress, '详细地址不能为空')
