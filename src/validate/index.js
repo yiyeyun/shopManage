@@ -22,8 +22,6 @@ export function validatePhone(value) {
   })
 }
 
-
-
 // 不为空验证
 export function validateNotNull(value, type) {
   return new Promise((resolve, reject) => {
@@ -35,20 +33,13 @@ export function validateNotNull(value, type) {
     }
   })
 }
-
-// 验证文本长度
-export function validateTextLength(value, name, min, max) {
-  console.log(value, name)
-  const length = value && (value + '').trim().length
-  console.log(length)
-  if (min && !value) {
-    return false
-  }
-  if (min && length < min) {
-    return false
-  }
-  if (max && length > max) {
-    return false
-  }
-  return true
+export function validateIntege(value, message) {
+  return new Promise((resolve, reject) => {
+    if (!/^[1-9]+[0-9]*$/.test(+value)) {
+      warningMessage(message)
+      reject()
+    } else {
+      resolve()
+    }
+  })
 }

@@ -7,12 +7,13 @@
       :rules="rules"
     >
       <el-form-item label="模板名称" prop="name">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.name" :disabled="type==='edit'"/>
       </el-form-item>
       <el-form-item label="模板选择" prop="templateId">
         <div class="flex">
           <div
             v-for="(item, index) in templateList"
+            v-show="type === 'add' || item.templateId === form.templateId"
             :key="item.templateId"
             :class="item.templateId === form.templateId ? 'active': ''"
             class="flex flex-column model mr10 align-center"
@@ -73,7 +74,8 @@ export default {
   props: {
     voucherId: String,
     type: String,
-    dialog: Boolean
+    dialog: Boolean,
+    editData: Object
   },
   data() {
     return {
@@ -98,13 +100,31 @@ export default {
         this.form.templateId = ''
         this.form.paramData = {}
         this.form.productList = []
+        this.paramDataKey = []
+        this.paramDataValue = []
+        this.$emit('init-edit-data')
+      }
+    },
+    editData: {
+      immediate: true,
+      deep: true,
+      handler(data) {
+        console.log('data', data)
+        if (data.name) {
+          this.form.name = data.name
+          this.form.templateId = +data.templateId
+          this.form.productList = data.productIdList
+          for (const key in data.paramDataMap) {
+            this.paramDataKey.push(key)
+            this.paramDataValue.push(data.paramDataMap[key])
+          }
+        }
       }
     }
   },
   async mounted() {
     this.getTemplateList()
     const list = await getList({ pageNum: 1, pageSize: 100 })
-    console.log(333, list)
     this.productList = list.data
   },
   methods: {
@@ -120,14 +140,6 @@ export default {
       this.$emit('view-detail', data)
       // this.templateData = data
     },
-    // deleteParam(index) {
-    //   this.paramDataKey.splice(index, 1)
-    //   this.paramDataValue.splice(index, 1)
-    // },
-    // addParam() {
-    //   this.paramDataKey.push('')
-    //   this.paramDataValue.push('')
-    // },
     submit() {
       console.log(this.form)
       this.paramDataKey.forEach((item, index) => {
@@ -144,6 +156,8 @@ export default {
           console.log(this.type, 555)
           if (this.type === 'add') {
             return voucherHandle(this.form)
+          } else {
+            return voucherHandle(this.form, this.editData.voucherId)
           }
         })
         .then(res => {
@@ -152,16 +166,19 @@ export default {
           } else {
             this.$emit('edit-success')
           }
+          this.$message.success('操作成功')
         })
     },
     selectTemplate(data) {
-      this.paramDataKey = []
-      this.paramDataValue = []
-      this.form.templateId = data.templateId
-      data.paramData.forEach(item => {
-        this.paramDataKey.push(item)
-        this.paramDataValue.push('')
-      })
+      if (this.type === 'add') {
+        this.paramDataKey = []
+        this.paramDataValue = []
+        this.form.templateId = data.templateId
+        data.paramData.forEach(item => {
+          this.paramDataKey.push(item)
+          this.paramDataValue.push('')
+        })
+      }
     }
   }
 }

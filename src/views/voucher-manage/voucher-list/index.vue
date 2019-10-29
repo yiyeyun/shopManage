@@ -3,7 +3,7 @@
     <div class="mb20">
       <el-button type="warning" size="small" @click="voucherCreate">创建提货券</el-button>
     </div>
-    <idol-table :list="list" />
+    <idol-table :list="list" @edit-item="editItem" @delete-item="deleteItem"/>
     <el-pagination
       background
       class="mt10"
@@ -17,11 +17,15 @@
       :visible.sync="voucherDialog"
       width="600px"
     >
-      <idol-handle @view-detail="viewDetail"
-                   :dialog="voucherDialog"
-                   @edit-success="editSuccess"
-                   @add-success="addSuccess"
-                   :type="handleType"/>
+      <idol-handle
+        :dialog="voucherDialog"
+        :edit-data="editData"
+        :type="handleType"
+        @view-detail="viewDetail"
+        @init-edit-data="editData = {}"
+        @edit-success="editSuccess"
+        @add-success="addSuccess"
+      />
     </el-dialog>
     <el-dialog
       title="模板详情"
@@ -70,7 +74,8 @@
 
 <script>
 import {
-  getList
+  getList,
+  voucherDelete
 } from '../../../api/voucher'
 import table from './table'
 import handle from './handle'
@@ -91,7 +96,8 @@ export default {
       pageTotal: 0,
       templateData: {},
       templateDialog: false,
-      list: []
+      list: [],
+      editData: {}
     }
   },
   mounted() {
@@ -111,6 +117,11 @@ export default {
       this.getList()
       this.voucherDialog = false
     },
+    editItem(data) {
+      this.editData = data
+      this.handleType = 'edit'
+      this.voucherDialog = true
+    },
     editSuccess() {
       this.getList()
       this.voucherDialog = false
@@ -122,6 +133,16 @@ export default {
     previewImg() {
       const viewer = this.$el.querySelector('v-viewer').$viewer
       viewer.show()
+    },
+    async deleteItem(id) {
+      try {
+        await this.$confirm('确认删除?')
+        await voucherDelete(id)
+        this.$message.success('删除成功')
+        this.getList()
+      } catch (e) {
+        console.log(e)
+      }
     },
     async getList() {
       try {

@@ -39,7 +39,7 @@
             <i class="el-icon-tickets" />
             <span>商家管理</span>
           </template>
-          <el-menu-item index="4-1">地址管理</el-menu-item>
+          <el-menu-item index="/address">地址管理</el-menu-item>
         </el-submenu>
       </el-menu>
     </div>

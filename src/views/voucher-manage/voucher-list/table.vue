@@ -58,9 +58,17 @@
         width="160px"
       />
 
-      <el-table-column label="操作" align="center" width="150px">
+      <el-table-column label="操作" align="center" width="210px">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="deleteItem(scope.row.id)">删除</el-button>
+          <el-button
+            v-show="scope.row.lock === 1"
+            type="primary"
+            size="mini"
+            @click="editItem(scope.row)"
+          >编辑</el-button>
+          <el-button type="primary" size="mini" @click="printItem(scope.row.voucherId)">打印</el-button>
+          <el-button type="danger" size="mini" @click="deleteItem(scope.row.voucherId)">删除</el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -70,15 +78,38 @@
       width="600px"
       @close="paramsData=[]"
     >
-      <div class="flex mb20" v-for="item in paramsData" :key="item.key">
-        <div class="font-14-999 width-100 mr20 text-right">{{item.key}}</div>
-        <div class="font-14-333 font-weight-600">{{item.value}}</div>
+      <div v-for="item in paramsData" :key="item.key" class="flex mb20">
+        <div class="font-14-999 width-100 mr20 text-right">{{ item.key }}</div>
+        <div class="font-14-333 font-weight-600">{{ item.value }}</div>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="打印"
+      :visible.sync="printDialog"
+      width="400px"
+    >
+      <div class="flex align-center">
+        <div class="width-100 mr10 text-right">打印数量</div>
+        <div>
+          <el-input v-model="printParam.num" />
+        </div>
+      </div>
+      <div class="flex mt20">
+        <div class="width-100 mr10" />
+        <el-button type="warning" size="mini" @click="submit">提交</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import {
+  voucherPrint
+} from '../../../api/voucher'
+import {
+  validateIntege
+} from '../../../validate'
+
 export default {
   name: 'Table',
   props: {
@@ -89,7 +120,12 @@ export default {
   },
   data() {
     return {
+      printParam: {
+        num: 0,
+        voucherId: ''
+      },
       paramsDialog: false,
+      printDialog: false,
       paramsData: []
     }
   },
@@ -111,6 +147,27 @@ export default {
       this.paramsDialog = true
     },
 
+    printItem(id) {
+      this.printParam.voucherId = id
+      this.printDialog = true
+    },
+
+    editItem(data) {
+      this.$emit('edit-item', data)
+    },
+
+    async submit() {
+      try {
+        await validateIntege(this.printParam.num, '数量格式有误!')
+        await voucherPrint(this.printParam)
+        this.$message.success('提交成功')
+        this.$emit('data-init')
+        this.printDialog = false
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
     deleteItem(id) {
       this.$emit('delete-item', id)
     }
@@ -123,5 +180,8 @@ export default {
     width: 40px;
     height: 40px;
     margin: 0 5px;
+  }
+  .width-100{
+    box-sizing: border-box;
   }
 </style>

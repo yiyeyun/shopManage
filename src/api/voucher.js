@@ -9,10 +9,26 @@ export function getTemplateList() {
     url: `app/voucher/template/list`
   })
 }
-export function voucherHandle(data) {
+export function voucherHandle(data, id) {
+  if (id) {
+    data.voucherId = id
+  }
   return request({
     url: `app/voucher/createOrUpdate`,
     data,
+    method: 'post'
+  })
+}
+export function voucherPrint(data) {
+  return request({
+    url: `app/voucher/application/print`,
+    method: 'get',
+    params: data
+  })
+}
+export function voucherDelete(id) {
+  return request({
+    url: `app/voucher/delete/${id}`,
     method: 'post'
   })
 }
