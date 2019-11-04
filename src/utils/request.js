@@ -14,7 +14,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    console.log(getToken())
+    // console.log(getToken())
     config.headers.token = getToken()
     return config
   },

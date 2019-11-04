@@ -25,6 +25,10 @@ export default new Router({
           component: () => import('@/views/voucher-manage/voucher-list')
         },
         {
+          path: '/print-list',
+          component: () => import('@/views/voucher-manage/print-list')
+        },
+        {
           path: '/address',
           component: () => import('@/views/shopper-manage/address')
         }

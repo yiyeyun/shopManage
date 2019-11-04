@@ -61,13 +61,22 @@
       <el-table-column label="操作" align="center" width="210px">
         <template slot-scope="scope">
           <el-button
-            v-show="scope.row.lock === 1"
+            :disabled="scope.row.lock === 2"
             type="primary"
             size="mini"
             @click="editItem(scope.row)"
           >编辑</el-button>
-          <el-button type="primary" size="mini" @click="printItem(scope.row.voucherId)">打印</el-button>
-          <el-button type="danger" size="mini" @click="deleteItem(scope.row.voucherId)">删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="printItem(scope.row.voucherId)"
+          >打印</el-button>
+          <el-button
+            type="danger"
+            :disabled="scope.row.lock === 2"
+            size="mini"
+            @click="deleteItem(scope.row.voucherId)"
+          >删除</el-button>
 
         </template>
       </el-table-column>
@@ -94,10 +103,43 @@
           <el-input v-model="printParam.num" />
         </div>
       </div>
+
+      <div v-show="printParam.addressId" class="flex align-center mt10">
+        <div class="width-100 mr10 text-right">收货地址</div>
+        <div class="font-weight-600">
+          {{ address.receiverState }}{{ address.receiverCity }}{{ address.receiverDistrict }}{{ address.receiverAddress }}
+        </div>
+      </div>
+
+      <div class="flex align-center mt10">
+        <div class="width-100 mr10 text-right" />
+        <div>
+          <el-button type="primary" size="mini" @click="addressSelect">选择地址</el-button>
+          <!--<el-select v-model="printParam.addressId" placeholder="请选择收货地址">-->
+          <!--<el-option-->
+          <!--v-for="item in addressData"-->
+          <!--:key="item.addressId"-->
+          <!--:label="item.receiverName"-->
+          <!--:value="item.addressId"-->
+          <!--/>-->
+          <!--</el-select>-->
+        </div>
+      </div>
       <div class="flex mt20">
         <div class="width-100 mr10" />
         <el-button type="warning" size="mini" @click="submit">提交</el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog title="地址选择" :visible.sync="addressDialog" width="600px">
+      <div v-for="item in addressData" :key="item.addressId">
+        <el-radio v-model="printParam.addressId" :label="item.addressId" @change="onAddressChange(item)">
+          <div class="mb10">姓名：{{ item.receiverName }}</div>
+          <div class="mb10">联系方式：{{ item.receiverMobile }}</div>
+          <div class="mb20">详细地址：{{ item.receiverState }}{{ item.receiverCity }}{{ item.receiverDistrict }}{{ item.receiverAddress }}</div>
+        </el-radio>
+      </div>
+      <!--<el-button type="warning" size="mini">确定</el-button>-->
     </el-dialog>
   </div>
 </template>
@@ -106,6 +148,9 @@
 import {
   voucherPrint
 } from '../../../api/voucher'
+import {
+  getList
+} from '../../../api/address'
 import {
   validateIntege
 } from '../../../validate'
@@ -122,14 +167,30 @@ export default {
     return {
       printParam: {
         num: 0,
-        voucherId: ''
+        voucherId: '',
+        addressId: ''
       },
       paramsDialog: false,
       printDialog: false,
-      paramsData: []
+      addressDialog: false,
+      address: {},
+      paramsData: [],
+      addressData: []
     }
   },
+  async mounted() {
+    const address = await getList()
+    this.addressData = address.data
+  },
   methods: {
+    onAddressChange(data) {
+      console.log(this.printParam.addressId)
+      this.addressDialog = false
+      this.address = data
+    },
+    addressSelect() {
+      this.addressDialog = true
+    },
     previewImg(data) {
       console.log(data)
       const className = `.v-viewer-${data.$index}`
@@ -162,6 +223,12 @@ export default {
         await voucherPrint(this.printParam)
         this.$message.success('提交成功')
         this.$emit('data-init')
+        this.printParam = {
+          num: 0,
+          voucherId: '',
+          addressId: ''
+        }
+        this.address = {}
         this.printDialog = false
       } catch (e) {
         console.log(e)
@@ -184,4 +251,7 @@ export default {
   .width-100{
     box-sizing: border-box;
   }
+    /deep/ .el-radio{
+        display: flex;
+    }
 </style>

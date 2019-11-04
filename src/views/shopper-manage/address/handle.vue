@@ -63,9 +63,11 @@ export default {
     address: {
       immediate: true,
       handler(data) {
-        if (data.id) {
-          this.addressId = data.id
+        console.log(data)
+        if (data.addressId) {
+          this.addressId = data.addressId
           this.form.receiverName = data.receiverName
+          this.form.receiverMobile = data.receiverMobile
           this.form.receiverState = data.receiverState
           this.form.receiverCity = data.receiverCity
           this.form.receiverDistrict = data.receiverDistrict
@@ -73,7 +75,7 @@ export default {
         }
       }
     },
-    addressDialog(data) {
+    dialog(data) {
       if (!data) {
         this.form = {
           receiverName: '',
@@ -106,9 +108,10 @@ export default {
           await addressHandle(this.form)
           this.$emit('add-success')
         } else {
-          await addressHandle(this.form, this.address.id)
+          await addressHandle(this.form, this.address.addressId)
           this.$emit('edit-success')
         }
+        this.$message.success('操作成功')
       } catch (e) {
         console.log(e)
       }

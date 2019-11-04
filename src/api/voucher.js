@@ -22,13 +22,23 @@ export function voucherHandle(data, id) {
 export function voucherPrint(data) {
   return request({
     url: `app/voucher/application/print`,
-    method: 'get',
-    params: data
+    method: 'post',
+    data
   })
 }
 export function voucherDelete(id) {
   return request({
     url: `app/voucher/delete/${id}`,
     method: 'post'
+  })
+}
+export function getPrintList({ pageNum, pageSize }) {
+  return request({
+    url: `app/voucher/print/list/${pageNum}/${pageSize}`
+  })
+}
+export function printCancel(id) {
+  return request({
+    url: `app/voucher/print/cancel/${id}`
   })
 }

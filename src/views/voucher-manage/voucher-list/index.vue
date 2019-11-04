@@ -3,7 +3,12 @@
     <div class="mb20">
       <el-button type="warning" size="small" @click="voucherCreate">创建提货券</el-button>
     </div>
-    <idol-table :list="list" @edit-item="editItem" @delete-item="deleteItem"/>
+    <idol-table
+      :list="list"
+      @init-data="getList"
+      @edit-item="editItem"
+      @delete-item="deleteItem"
+    />
     <el-pagination
       background
       class="mt10"

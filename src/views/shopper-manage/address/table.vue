@@ -38,7 +38,7 @@
       >
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="editItem(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="deleteItem(scope.row.id)">删除</el-button>
+          <el-button type="danger" size="mini" @click="deleteItem(scope.row.addressId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -46,6 +46,10 @@
 </template>
 
 <script>
+import {
+  addressDelete
+} from '../../../api/address'
+
 export default {
   name: 'Table',
   props: {
@@ -55,8 +59,15 @@ export default {
     editItem(data) {
       this.$emit('edit-item', data)
     },
-    deleteItem(id) {
-      // this.$emit('delete-item', id)
+    async deleteItem(id) {
+      try {
+        await this.$confirm('确认删除?')
+        await addressDelete(id)
+        this.$message.success('删除成功')
+        this.$emit('delete-success')
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

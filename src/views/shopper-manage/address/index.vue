@@ -3,7 +3,7 @@
     <div class="mb20">
       <el-button type="warning" size="small" @click="addressCreate">新建收货地址</el-button>
     </div>
-    <idol-table :list="list" @edit-item="editItem" />
+    <idol-table :list="list" @edit-item="editItem" @delete-success="getList"/>
     <el-dialog
       :title="handleType === 'add' ? '新增地址': '编辑地址'"
       :visible.sync="addressDialog"
@@ -14,6 +14,7 @@
         @init="editData = {}"
         @add-success="addSuccess"
         @edit-success="editSuccess"
+        :address="editData"
         :type="handleType"/>
     </el-dialog>
   </div>
@@ -40,16 +41,20 @@ export default {
       editData: {}
     }
   },
-  async mounted() {
-    const list = getList()
-    this.list = list.data
+  mounted() {
+    this.getList()
   },
   methods: {
+    async getList() {
+      const list = await getList()
+      this.list = list.data
+    },
     addressCreate() {
       this.type = 'add'
       this.addressDialog = true
     },
     addSuccess() {
+      this.getList()
       this.addressDialog = false
     },
     editSuccess() {
@@ -57,6 +62,7 @@ export default {
       this.editData = {}
     },
     editItem(data) {
+      console.log(data, '222')
       this.editData = data
       this.type = 'edit'
       this.addressDialog = true
